@@ -8,12 +8,12 @@ erstiapp = (function () {
         "start": {
             name: "Start",
             $page: "#start",
-            icon: null
+            icon: "home"
         },
         "page1": {
             name: "Seite1",
             $page: "#next",
-            icon: null
+            icon: ""
         }
     }
     //public
@@ -71,9 +71,9 @@ erstiapp = (function () {
             $('#menu').remove().prependTo($page).html("");
             //adds menu items to the event for the menu panel
             $.each(menu, function (key, value) {
-                $('<input type="button" id="menuitem_' + key.replace(/ /g, '') + '" onclick="window.location.hash=\'' + value.$page + '\'" value="' + value.name + '" />').appendTo($('#menu')).button();
+                var $menuItem = $('<input type="button" id="menuitem_' + key.replace(/ /g, '') + '" data-icon="' + value.icon + '" onclick="window.location.hash=\'' + value.$page + '\'" value="' + value.name + '" />').appendTo($('#menu')).button();
                 if (value.$page === window.location.hash)
-                    $("#menuitem_" + key.replace(/ /g, '')).button("disable");
+                    $menuItem.button("disable");
             });
             $page.trigger("create");
         },
