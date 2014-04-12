@@ -1,61 +1,65 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Erstiapp</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="lib/jQuery.mobile/ersti_app_theme.min.css" />
-        <link rel="stylesheet" href="lib/jQuery.mobile/jquery.mobile.icons.min.css" />
-        <link rel="stylesheet" href="lib/jQuery.mobile/jquery.mobile.structure-1.4.2.min.css" />
-        <script src="lib/jQuery/jquery-2.1.0.min.js"></script>
-        <script src="lib/jQuery.mobile/jquery.mobile-1.4.2.min.js"></script>
-        <style type="text/css">
-            .header .ui-btn{
-                float: left;
-                margin: 4px;
-                margin-top: 3px;
-                height: 16px;
-                border: 0px;
-                -moz-box-shadow: none;
-                box-shadow: none;
-            }
-        </style>
-    </head>
-    <body>
-        <div data-role="page" id="start">
-            <div data-role="panel" id="mypanel">
-                asdasdökä
-            </div>
-            <div data-role="header" class="header">
-                <input type="button" class="openpanel" data-icon="bars"/>
-                <h1>Willkommen!</h1>
-                <input type="button" value="weiter" onclick="window.location.hash='#next'">
-            </div>
-            <div data-role="content" class="content">
-            </div>
-            <div class="footer" data-role="footer" data-position="fixed">
-                 <h1>
-                </h1>
+<head>
+    <title>Erstiapp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="lib/jQuery.mobile/ersti_app_theme.min.css"/>
+    <link rel="stylesheet" href="lib/jQuery.mobile/jquery.mobile.icons.min.css"/>
+    <link rel="stylesheet" href="lib/jQuery.mobile/jquery.mobile.structure-1.4.2.min.css"/>
+    <script src="lib/jQuery/jquery-2.1.0.min.js"></script>
+    <script src="lib/jQuery.mobile/jquery.mobile-1.4.2.min.js"></script>
+    <style type="text/css">
+        div[data-role="header"] .buttonDiv {
+            float: left;
+        }
 
-            </div>
-        </div>
+        div[data-role="header"] .buttonDiv .ui-btn {
+            margin-left: 8px;
+            margin-top: 3px;
+            height: 16px;
+            border: 0px;
+            -moz-box-shadow: none;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+<div data-role="page" id="start">
+    <div data-role="header">
+        <h1>Willkommen!</h1>
+    </div>
+    <div data-role="content" class="content">
+        <input type="button" value="weiter" onclick="window.location.hash='#next'">
+    </div>
+    <div class="footer" data-role="footer" data-position="fixed">
+        <h1>
+        </h1>
 
-        <div data-role="page" id="next">
-            <div data-role="panel" id="mypanel">
-                asdasd
-            </div>
-            <div data-role="header" class="header">
-                <input type="button" class="openpanel" data-icon="bars"/>
-                <h1>Neue Seite!</h1>
-            </div>
-            <div data-role="content" class="content">
-            </div>
-            <div class="footer" data-role="footer" data-position="fixed">
-                <h1>
-                </h1>
+    </div>
+</div>
 
-            </div>
-        </div>
-    <script type="text/javascript" src="app.js"></script>
-    </body>
+<div data-role="page" id="login">
+    <div data-role="header">
+        <h1>Bitte log dich ein!</h1>
+    </div>
+    <div data-role="content" class="content">
+        <label for="username">Benutzername:</label>
+        <input type="text" id="username" />
+        <label for="password">Passwort:</label>
+        <input type="text" id="password" />
+        <input type="button" id="loginButton" value="einloggen" />
+    </div>
+    <div class="footer" data-role="footer" data-position="fixed">
+        <h1>
+        </h1>
+    </div>
+</div>
+
+<input type="button" id="openpanel" data-icon="bars"/>
+
+<div data-role="panel" id="menu">
+</div>
+<script type="text/javascript" src="app.js"></script>
+</body>
 </html>
