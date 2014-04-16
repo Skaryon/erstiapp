@@ -10,7 +10,6 @@ erstiapp = (function () {
         init: function () {
             app = this;
             //load modules
-            //$('body').append('<script type="text/javascript" src="modules.js"></script>');
             //all pages that should show the menu panel should go in here
             $("#login").on("pagebeforeshow", function (event) {
                 var $this = $(this);
@@ -21,12 +20,16 @@ erstiapp = (function () {
                         if (success) {
                             window.location.hash = "#start";
                         } else {
-                            app.exception("Falsches Passwort und/oder Benutzername!", $(this));
+                            app.exception("Falsches Passwort und/oder Benutzername!", $this);
                         }
                     });
                 });
             });
-            $("#start,#next").on("pagebeforeshow", function (event) {
+            if (window.location.hash !== "#login") {
+                window.location.hash = "#login";
+                location.reload();
+            }
+            $(this.menu.getPanelPages()).on("pagebeforeshow", function (event) {
                 app.menu.addPanel($(this));
             });
             //handle userlogin
@@ -38,6 +41,7 @@ erstiapp = (function () {
                         window.location.hash = "#login";
                 });
             });
+            return this;
         },
         //show an exception popup
         exception: function (exception, $page) {
@@ -71,22 +75,20 @@ erstiapp = (function () {
             //private
             //all menu items
             var menuItems = {
-                "start": {
-                    name: "Start",
-                    $page: "#start",
-                    icon: "home"
-                },
-                "page1": {
-                    name: "Seite1",
-                    $page: "#next",
-                    icon: ""
-                }
             }
             //public
             return {
                 //add a new menutiem
-                add: function (menuItem) {
-                    menuItems.push(menuItem);
+                add: function (name, menuItem) {
+                    menuItems[name] = menuItem;
+                },
+                //get all pages with panels
+                getPanelPages: function () {
+                    var panelPages = [];
+                    $.each(menuItems, function (key, value) {
+                        panelPages.push(value.$page);
+                    });
+                    return panelPages.join(', ');
                 },
                 //remove menuItem
                 remove: function (id) {
@@ -126,16 +128,44 @@ erstiapp = (function () {
         })(),
         modules: (function () {
             //private
-            var mods = [];
+            var mods = {};
+            var moduleCount = 0;
             //public
             return {
                 setModules: function (m) {
-                    modules = m;
-                    for (var i = 0; i < m.length; i++) {
-                        $('body').append(m[i].path + "/module.js");
+                    mods = m;
+                    $.each(m, function (key, module) {
+                        moduleCount++;
+                    });
+                    $.each(m, function (key, module) {
+                        $('body').append('<script type="text/javascript" src="modules/' + module.path + '/module.js" ></script>');
+                    });
+                },
+                registerModule: function (name, instance) {
+                    mods[name].instance = instance;
+                    return mods[name].path;
+                },
+                module: function (name) {
+                    return mods[name].instance;
+                },
+                loadPage: function (path, callback) {
+                    var page = $('<div></div>').load(path, function (responseTxt, statusTxt, xhr) {
+                        if (statusTxt == "success") {
+                            var $page = $(this).find('div[data-role=page]');
+                            $page.appendTo('body');
+                            $page.trigger("pagecreate");
+                            callback($page);
+                        }
+                    });
+                },
+                finishedLoading: function (name) {
+                    moduleCount--;
+                    if (moduleCount < 1) {
+                        erstiapp.init();
                     }
                 }
             }
         })()
     }
-})().init();
+})();
+$('<script type="text/javascript" src="modules.js"></script>').appendTo('body');
