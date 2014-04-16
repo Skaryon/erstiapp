@@ -149,7 +149,7 @@ erstiapp = (function () {
                     return mods[name].instance;
                 },
                 loadPage: function (path, callback) {
-                    var page = $('<div></div>').load(path, function (responseTxt, statusTxt, xhr) {
+                    $('<div></div>').load(path, function (responseTxt, statusTxt, xhr) {
                         if (statusTxt == "success") {
                             var $page = $(this).find('div[data-role=page]');
                             $page.appendTo('body');
