@@ -4,6 +4,8 @@ erstiapp.modules.setModules({
     },
     "page1": {
         "path": "module1"
+    },
+    "qi": {
+        "path": "q_and_i"
     }
-})
-;
+});
