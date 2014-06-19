@@ -3,7 +3,7 @@ erstiapp.modules.setModules({
         "path": "start"
     },
     "page1": {
-        "path": "module1"
+        "path": "einr"
     },
     "qi": {
         "path": "q_and_i"

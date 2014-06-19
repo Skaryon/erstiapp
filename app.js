@@ -20,7 +20,7 @@ erstiapp = (function() {
                         if (success) {
                             app.changePage("#start");
                         } else {
-                            app.exception("Falsches Passwort und/oder Benutzername!", $this);
+                            app.exception("Falsches Passwort und/oder Benutzername!", $(this));
                         }
                     });
                 });

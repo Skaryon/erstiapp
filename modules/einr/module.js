@@ -10,8 +10,8 @@ module = (function () {
             path = erstiapp.modules.registerModule("page1", this);
             erstiapp.menu.add(
                 "module1", {
-                    name: "Seite1",
-                    $page: "#next",
+                    name: "Einrichtungen",
+                    $page: "#einr",
                     icon: "",
                     panel: true
                 }
@@ -22,5 +22,4 @@ module = (function () {
             });
         }
     }
-})
-().init();
+})().init();

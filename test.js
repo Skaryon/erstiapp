@@ -17,6 +17,8 @@ var test = (function() {
         }
     }
 })()
+test = test();
+
 
 test.b()
 test.a
