@@ -9,7 +9,7 @@ module = (function () {
         init: function () {
             path = erstiapp.modules.registerModule("page1", this);
             erstiapp.menu.add(
-                "module1", {
+                "einr", {
                     name: "Einrichtungen",
                     $page: "#einr",
                     icon: "",

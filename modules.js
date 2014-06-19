@@ -10,5 +10,8 @@ erstiapp.modules.setModules({
     },
     "lageplan": {
         "path": "lageplan"
+    },
+    "mensa": {
+        "path": "mensa"
     }
 });

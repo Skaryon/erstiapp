@@ -1,4 +1,12 @@
 var erstiapp;
+var date = new Date();
+var m = (date.getMonth() + 1);
+if (m<10)
+    m = "0" + m;
+var d = date.getDate().toString();
+if (d<10)
+    d = "0" + d;
+console.log(date.getFullYear().toString() + m + d)
 erstiapp = (function() {
     //private
     //references the app for use in callback functions
