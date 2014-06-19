@@ -7,5 +7,8 @@ erstiapp.modules.setModules({
     },
     "qi": {
         "path": "q_and_i"
+    },
+    "lageplan": {
+        "path": "lageplan"
     }
 });
