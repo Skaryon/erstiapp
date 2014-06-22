@@ -48,7 +48,7 @@ module = (function() {
                         erstiapp.modules.loadPage('modules/' + path + '/start.html', function($page) {
                             $startPage = $page;
                             $startPage.on("pagebeforeshow", function(event) {
-                                $('#questionButton').click(function() {
+                                $('#questionButton').unbind().click(function() {
                                     if ($("#qi_start #questionCat option:selected").val() === "0")
                                         erstiapp.exception("Bitte wähle eine Kategorie aus!", "#" + $startPage.attr("id"));
                                     else {
