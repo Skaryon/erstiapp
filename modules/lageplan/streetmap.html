@@ -3,7 +3,7 @@
 
 <html>
     <head>
-        <title>Leaflet Quick Start Guide Example</title>
+        <title>Lageplan Hochschule Trier</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta charset="utf-8" />
 
@@ -18,28 +18,139 @@
             }
             html, body, #map {
                 height: 100%;
-            }</style>
+            }
+            table {
+                color: black;
+                background: #fff;
+                border: 1px solid #b4b4b4;
+                font: bold 17px helvetica;
+                padding: 0;
+                margin-top:10px;
+                margin:0 auto;  
+                -webkit-border-radius: 8px;
+            }
+
+            table tr td {
+                color: #666;
+                border-bottom: 1px solid #b4b4b4;
+                border-right: 1px solid #b4b4b4;
+                padding: 10px 10px 10px 10px;
+                background-image: -webkit-linear-gradient(top, #fdfdfd, #eee);
+            }
+
+            table tr td:last-child {
+                border-right: none;
+            }
+
+            table tr:last-child td {
+                border-bottom: none;
+            }
+        </style>
     </head>
     <body>
         <div id="map"></div>
-
+        <table data-role="table" id="Legende" data-mode="reflow">
+            <thead>
+                <tr>
+                    <th>Gebäude</th>
+                    <th>Funktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>A</td>
+                    <td>Maschinenbau und Fahrzeugtechnik, Versorgungs- und Energietechnik, Dezernat III, Leonardo</td>
+                </tr>
+                <tr>
+                    <td>B</td>
+                    <td>Elektrotechnik, Hochschulbibliothek, Zentralwerkstatt Elektro</td>
+                </tr>
+                <tr>
+                    <td>C</td>
+                    <td>Bauingenieurwesen, Lebensmitteltechnik, Grundlagen Physik</td>
+                </tr>
+                <tr>
+                    <td>D</td>
+                    <td>Architektur, Lebensmitteltechnik, Schreinerei</td>
+                </tr>                
+                <tr>
+                    <td>E</td>
+                    <td>Mensa, Cafeteria, Studierendenwerk SWT, Automat zur Kartenaufladung mit Scheinen, Career Service, Buchverkauf, Copy Shop
+                </tr>
+                <tr>
+                    <td>F</td>
+                    <td>AStA-Büro, Studierendensekretariat, Prüfungsamt, Studienberatung, Fernstudium Informatik, Aula (1. Stock), Sitzungsraum F3</td>
+                </tr>
+                <tr>
+                    <td>G</td>
+                    <td>Studienservice (Studierendensekretariat, Prüfungsamt, Studienberatung), Computerräume, Rechenzentrum, Automat zur Kartenaufladung, Automaten zur Validierung
+                    </td>
+                </tr>
+                <tr>
+                    <td>H</td>
+                    <td>Hörsaal 1, 2, 3</td>
+                </tr>
+                <tr>
+                    <td>J</td>
+                    <td>BAFöG-Amt, Hochschulleitung, Präsidialamt, Öffentlichkeitsarbeit, Hochschulverwaltung, Verwaltungsdruckerei, Poststelle, Auslandsamt, Gründungsbüro (Raum J 201 a)</td>
+                </tr>
+                <tr>
+                    <td>K</td>
+                    <td>Wirtschaft, Assistentenbüro, Bachelor-Lernraum (1. UG), AStA-Coffee-Lounge (1.UG)</td>
+                </tr>
+                <tr>
+                    <td>L</td>
+                    <td>Informatik</td>
+                </tr>
+                <tr>
+                    <td>M</td>
+                    <td>Maschinenhalle, Maschinenbau, Versorgungstechnik, Zentralwerkstatt Metall</td>
+                </tr>
+                <tr>
+                    <td>N</td>
+                    <td>Informatik</td>
+                </tr>
+                <tr>
+                    <td>O</td>
+                    <td>Informatik, Akademisches Auslandsamt (Raum O 1 und Raum O 2)</td>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>Turnhalle, Hausmeisterei, Fundbüro</td>
+                </tr>
+                <tr>
+                    <td>X</td>
+                    <td>Informatik</td>
+                </tr>
+            </tbody>
+        </table>
         
+
+
         <script>
             //FH Koordinaten
             var latpos = 49.767900;
             var lngpos = 6.628000;
 
             var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    osmAttrib = '',
+                    //osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
                     osm = L.tileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib});
 
             var map = L.map('map').setView([latpos, lngpos], 18).addLayer(osm);
-
             map.locate({setView: false});
-                        
+
+
+
+
             function onLocationFound(e) {
+                var popupOptions =
+                        {
+                            'autoPan': false
+                        };
                 L.marker(e.latlng).addTo(map)
-                        .bindPopup("Du bist hier.").openPopup();
+                        .bindPopup("Du bist hier.", popupOptions)
+                        .openPopup();
             }
             map.on('locationfound', onLocationFound);
 
