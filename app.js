@@ -27,31 +27,28 @@ $(function() {
                             erstiapp.exception(error, "#login");
                     });
                 });
-                $("#register").on("pagebeforeshow", function(event) {
-                    var $this = $(this);
-                    $this.find("#registerButton").unbind().click(function() {
-                        if ($('#register #npassword').val().length < 8)
-                            erstiapp.exception('Das Passwort muss mindestens 8 Zeichen lang sein', "#register");
-                        else
-                        if ($('#register #npassword').val() !== $('#register #npassword2').val())
-                            erstiapp.exception('Passwörter stimmen nicht überein!', "#register");
-                        else
-                        if (!/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test($('#register #nmail').val()))
-                            erstiapp.exception('Ungültige mailadresse!', "#register");
-                        else {
-                            app.login.setUsername($('#register #nusername').val());
-                            app.login.setPassword($('#register #npassword').val());
-                            app.login.setMail($('#register #nmail').val());
-                            app.login.add(function(success) {
-                                if (success) {
-                                    erstiapp.exception("Registrierung erfolgreich!", "#register");
-                                    window.setTimeout(function()  {
-                                        app.changePage("#login");
-                                    }, 2000);
-                                }
-                            });
-                        }
-                    });
+                $("#register").find("#registerButton").unbind().click(function() {
+                    if ($('#register #npassword').val().length < 8)
+                        erstiapp.exception('Das Passwort muss mindestens 8 Zeichen lang sein', "#register");
+                    else
+                    if ($('#register #npassword').val() !== $('#register #npassword2').val())
+                        erstiapp.exception('Passwörter stimmen nicht überein!', "#register");
+                    else
+                    if (!/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test($('#register #nmail').val()))
+                        erstiapp.exception('Ungültige mailadresse!', "#register");
+                    else {
+                        app.login.setUsername($('#register #nusername').val());
+                        app.login.setPassword($('#register #npassword').val());
+                        app.login.setMail($('#register #nmail').val());
+                        app.login.add(function(success) {
+                            if (success) {
+                                erstiapp.exception("Registrierung erfolgreich!", "#register");
+                                window.setTimeout(function()  {
+                                    app.changePage("#login");
+                                }, 2000);
+                            }
+                        });
+                    }
                 });
                 if (window.location.hash !== "#login") {
                     window.location.hash = "#login";
