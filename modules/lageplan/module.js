@@ -20,6 +20,7 @@ module = (function () {
             );
             erstiapp.modules.loadPage('modules/' + path + '/karte.html', function ($page) {
                 $startPage = $page;
+                //$('iframe').iframeAutoHeight();
                 erstiapp.modules.finishedLoading("lageplan");
             });
         }
