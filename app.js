@@ -22,7 +22,7 @@ $(function() {
                     app.login.setPassword($('#login #password').val());
                     app.login.check(function(success, error) {
                         if (success)
-                            app.changePage("#qi_start");
+                            app.changePage("#start");
                         else
                             erstiapp.exception(error, "#login");
                     });
