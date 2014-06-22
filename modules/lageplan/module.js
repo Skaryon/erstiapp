@@ -7,9 +7,7 @@ module = (function () {
     //public
     return {
         init: function () {
-            path = erstiapp.modules.registerModule("lageplan", this, {
-                search: true
-            });
+            path = erstiapp.modules.registerModule("lageplan", this);
             erstiapp.menu.add(
                 "lageplan", {
                     name: "Lageplan",

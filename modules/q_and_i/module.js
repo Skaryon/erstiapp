@@ -84,10 +84,10 @@ module = (function() {
                                         dataType: "json",
                                         url: erstiapp.getServer() + "getQuestions?category=" + $("#qi_questions #questionsCat option:selected").val(),
                                         complete: function(responseData, textStatus, jqXHR) {
+                                            $('#qi_questions #questions').html("");
                                             if (textStatus != "error") {
                                                 var data = JSON.parse(responseData['responseText']);
                                                 if (data.result) {
-                                                    $('#qi_questions #questions').html("");
                                                     var ul = $('<ul></ul>').appendTo($('#qi_questions #questions'));
                                                     for (var i = 0; i < data.questions.length; i++) {
                                                         var question = data.questions[i];
