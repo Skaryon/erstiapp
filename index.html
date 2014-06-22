@@ -1,53 +1,76 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Erstiapp</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="lib/jQuery.mobile/erstiapp_theme_blue.min.css"/>
-    <link rel="stylesheet" href="lib/jQuery.mobile/jquery.mobile.icons.min.css"/>
-    <link rel="stylesheet" href="lib/jQuery.mobile/jquery.mobile.structure-1.4.2.min.css"/>
-    <script src="lib/jQuery/jquery-2.1.0.min.js"></script>
-    <script src="lib/jQuery.mobile/jquery.mobile-1.4.2.min.js"></script>
-    <style type="text/css">
-        div[data-role="header"] .buttonDiv {
-            float: left;
-        }
+    <head>
+        <title>Erstiapp</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="css/mensa.css"/>
+        <link rel="stylesheet" href="lib/jQuery.mobile/erstiapp_theme_blue.min.css"/>
+        <link rel="stylesheet" href="lib/jQuery.mobile/jquery.mobile.icons.min.css"/>
+        <link rel="stylesheet" href="lib/jQuery.mobile/jquery.mobile.structure-1.4.2.min.css"/>
+        <script src="lib/jQuery/jquery-2.1.0.min.js"></script>
+        <script src="lib/jQuery.mobile/jquery.mobile-1.4.2.min.js"></script>
+        <style type="text/css">
+            div[data-role="header"] .buttonDiv {
+                float: left;
+            }
 
-        div[data-role="header"] .buttonDiv .ui-btn {
-            margin-left: 8px;
-            margin-top: 3px;
-            height: 16px;
-            border: 0px;
-            -moz-box-shadow: none;
-            box-shadow: none;
-        }
-    </style>
-</head>
-<body>
+            div[data-role="header"] .buttonDiv .ui-btn {
+                margin-left: 8px;
+                margin-top: 3px;
+                height: 16px;
+                border: 0px;
+                -moz-box-shadow: none;
+                box-shadow: none;
+            }
+            .ui-header h1{
+                overflow: visible !important;
+            }
+        </style>
+    </head>
+    <body>
+        <div data-role="page" id="login">
+            <div data-role="header">
+                <h1>Bitte log dich ein!</h1>
+            </div>
+            <div data-role="content" class="content">
+                <label for="username">Benutzername:</label>
+                <input type="text" id="username"/>
+                <label for="password">Passwort:</label>
+                <input type="text" id="password"/>
+                <input type="button" id="loginButton" value="einloggen"/>
+                <input type="button" id="goToReg" onclick="erstiapp.changePage('#register')" value="registrieren"/>
+            </div>
+            <div class="footer" data-role="footer" data-position="fixed">
+                <h1>
+                </h1>
+            </div>
+        </div>
+        <div data-role="page" id="register">
+            <div data-role="header">
+                <h1>Registrierung</h1>
+            </div>
+            <div data-role="content" class="content">
+                <label for="nusername">Benutzername:</label>
+                <input type="text" id="nusername"/>
+                <label for="nmail">Email</label>
+                <input type="text" id="nmail"/>
+                <label for="npassword">Passwort:</label>
+                <input type="text" id="npassword"/>
+                <label for="npassword2">Passwort wiederholen:</label>
+                <input type="text" id="npassword2"/>
+                <input type="button" id="registerButton" value="registrieren"/>
+            </div>
+            <div class="footer" data-role="footer" data-position="fixed">
+                <h1>
+                </h1>
+            </div>
+        </div>
 
+        <input type="button" id="openpanel" data-icon="bars"/>
 
-<div data-role="page" id="login">
-    <div data-role="header">
-        <h1>Bitte log dich ein!</h1>
-    </div>
-    <div data-role="content" class="content">
-        <label for="username">Benutzername:</label>
-        <input type="text" id="username"/>
-        <label for="password">Passwort:</label>
-        <input type="text" id="password"/>
-        <input type="button" id="loginButton" value="einloggen"/>
-    </div>
-    <div class="footer" data-role="footer" data-position="fixed">
-        <h1>
-        </h1>
-    </div>
-</div>
-
-<input type="button" id="openpanel" data-icon="bars"/>
-
-<div data-role="panel" id="menu">
-</div>
-<script type="text/javascript" src="app.js"></script>
-</body>
+        <div data-role="panel" id="menu">
+        </div>
+        <script type="text/javascript" src="app.js"></script>
+    </body>
 </html>

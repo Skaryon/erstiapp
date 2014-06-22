@@ -1,0 +1,162 @@
+/*
+***************************************************************************************************
+***************************************************************************************************
+***************************************************************************************************
+** Galerie
+***************************************************************************************************
+***************************************************************************************************
+***************************************************************************************************
+*/
+#mensa div.menu {
+background-color: #FFE270;
+padding: 5px 8px 5px 8px;
+color: #000000;
+margin: 0 0 5px 0;
+}
+#mensa div.menu-inhalt {
+padding: 5px;
+color: #000000;
+margin: 0 0 20px 0;
+}
+#mensa .galerie {
+  width: 500px;
+}
+#mensa .speiseplan-datum a {
+    display: none;
+}
+#mensa div.float-aufheben {
+    clear: both;
+    height: 0px;
+    width: 0px;
+    overflow: hidden;
+}
+
+/*
+***************************************************************************************************
+***************************************************************************************************
+** Titel
+***************************************************************************************************
+***************************************************************************************************
+*/
+
+#mensa .galerie-titel {
+  position: relative;
+  height: 126px;
+  background-image: url(/kiosk/grafik/bg_popup_galerie_titel.gif);
+  background-repeat: no-repeat;
+}
+
+#mensa .galerie-titel-versenden {
+  position: relative;
+  height: 126px;
+  background-image: url(/kiosk/grafik/bg_popup_galerie_titel_versenden.gif);
+  background-repeat: no-repeat;
+}
+
+#mensa .speiseplan {
+  position: relative;
+  height: 126px;
+  background-image: url(/kiosk/grafik/bg_popup_speiseplan_titel.gif);
+  background-repeat: no-repeat;
+}
+
+#mensa .kochrezepte {
+  position: relative;
+  height: 126px;
+  background-image: url(/kiosk/grafik/bg_popup_kochrezepte_titel.gif);
+  background-repeat: no-repeat;
+}
+
+#mensa div.speiseplan-datum {
+  background-color: #62B65A;
+  padding: 5px 8px 5px 8px;
+  color: #ffffff;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+}
+
+#mensa div.menu {
+  background-color: #FFE270;
+  padding: 5px 8px 5px 8px;
+  color: #000000;
+  margin: 0 0 5px 0;
+}
+
+#mensa h5.menu {
+    font-weight: bold;
+}
+
+#mensa h6.menu {
+    font-weight: bold;
+    color: #000000;
+   padding: 2px 8px 2px 8px;
+   margin: -5px 0 0 0;
+   background-color: #FFCC00;
+}
+
+#mensa div.menu-inhalt {
+  padding: 5px;
+  color: #000000;
+  margin: 0 0 20px 0;
+}
+
+#mensa div.menu-inhalt-zeile {
+  color: #000000;
+  margin: 0 0 5px 0;
+}
+
+
+#mensa div.menu-inhalt-zeile-text {
+  float: left;
+  width: 305px;
+}
+
+
+#mensa div.menu-inhalt-zeile-preis {
+  float: right;
+}
+                                      
+
+#mensa div.menu-inhalt-zeile-preis-item {
+  float: right;
+  padding: 0 0 0 5px;
+  font-size: 0.8em;
+  padding: 3px 0 0 5px;
+  color: #62B65A;
+  text-align: center;
+}
+
+#mensa table.menu-inhalt-zeile,
+#mensa table.stammessen{
+  width: 100%;
+}     
+
+#mensa td.menu-inhalt-zeile-text {
+  padding: 0 10px 0 0;
+  line-height: 1.4em;
+  width: 100%;
+}        
+
+#mensa td.menu-inhalt-zeile-preis {
+  text-align: right;
+}
+
+#mensa img.menu-inhalt-zeile-text {
+  margin: 0;
+}
+
+#mensa td.menu-inhalt-zeile-preis-st,
+#mensa td.menu-inhalt-zeile-preis-bed,
+#mensa td.menu-inhalt-zeile-preis-bes {
+    font-size: 0.8em;
+    padding: 3px 0 0 5px;
+    color: #62B65A;
+    text-align: center;
+}
+
+#mensa ul.menu-hinweise {
+  list-style-position: outside;
+  list-style-type: square;
+  font-size: 0.8em;
+  margin-left: 20px;
+}
