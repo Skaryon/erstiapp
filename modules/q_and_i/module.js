@@ -65,7 +65,7 @@ module = (function() {
                                                     erstiapp.exception(data.error, "#" + $startPage.attr("id"));
                                                     if (data.result) {
                                                         console.log(data.id)
-                                                        erstiapp.changePage("#qi_question", {}, {id: data.id, favAnswer: data.favAnswer});
+                                                        erstiapp.changePage("#qi_question", {}, {id: data.id, favAnswer: data.favAnswer, uID: erstiapp.login.getUserId()});
                                                     }
                                                 }
                                             },
@@ -76,6 +76,11 @@ module = (function() {
                                 });
                             });
                             $questionsPage.on("pagebeforeshow", function(event) {
+                                $('#qi_questions .footer a').first().click(function() {
+                                    $('#qi_questions #questionsCat').val(0);
+                                    $('#qi_questions #questionsCat').selectmenu('refresh');
+                                    $('#qi_questions #questions').html('');
+                                });
                                 $('#qi_questions #questionsCat').unbind().change(function() {
                                     $('#qi_questions #questionsCat').selectmenu("refresh");
                                     $.ajax({
@@ -91,14 +96,20 @@ module = (function() {
                                                     var ul = $('<ul></ul>').appendTo($('#qi_questions #questions'));
                                                     for (var i = 0; i < data.questions.length; i++) {
                                                         var question = data.questions[i];
-                                                        ul.append('<li qID="' + questions._id + '"><a onclick="erstiapp.changePage(\'#qi_question\',{},{id: \'' + question._id + '\', favAnswer: \'' + question.favAnswer + '\'})">' + question.text + '</a></li>');
+                                                        ul.append('<li qID="' + questions._id + '"><a onclick="erstiapp.changePage(\'#qi_question\',{},{id: \'' + question._id + '\', uID: \'' + question.user + '\', favAnswer: \'' + question.favAnswer + '\'})">' + question.text + '</a></li>');
+                                                        ul.find('a').unbind().click(function() {
+                                                            $('#qi_questions #questionsCat').val(0);
+                                                            $('#qi_questions #questionsCat').selectmenu('refresh');
+                                                            $('#qi_questions #questions').html('');
+                                                        });
                                                     }
                                                     ul.listview({
                                                         create: function(event, ui) {
-                                                            
+
                                                         }
                                                     });
-                                                }
+                                                } else
+                                                    $('#qi_questions #questions').html("");
                                             }
                                         },
                                         error: function(responseData, textStatus, errorThrown) {
@@ -116,6 +127,7 @@ module = (function() {
                                         if (textStatus != "error") {
                                             var data = JSON.parse(responseData['responseText']);
                                             $questionPage.find("#questionText").html(data.text);
+                                            var qID = data._id;
                                             $.ajax({
                                                 type: 'GET',
                                                 async: false,
@@ -124,7 +136,29 @@ module = (function() {
                                                 complete: function(responseData, textStatus, jqXHR) {
                                                     if (textStatus != "error") {
                                                         var u = JSON.parse(responseData['responseText']);
-                                                        $questionPage.find("#questionText").html('<p><b>' + u.name + ' schrieb:</b></p>' + data.text);
+                                                        var $qp = $questionPage.find("#questionText").html('<p><b>' + u.name + ' schrieb:</b></p>' + data.text);
+
+                                                        if (data.user === erstiapp.login.getUserId()) {
+                                                            var deleteButton = $('<a qID="' + qID + '" class="ui-btn ui-icon-delete ui-btn-icon-left">löschen</a>');
+                                                            $('<p style="text-align:center; "></p>').appendTo($qp).append(deleteButton);
+                                                            deleteButton.unbind().click(function() {
+                                                                var qID = $(this).attr("qID");
+                                                                if (confirm("Frage wirklich löschen?"))
+                                                                    $.ajax({
+                                                                        type: 'GET',
+                                                                        async: false,
+                                                                        dataType: "json",
+                                                                        url: erstiapp.getServer() + "deleteQuestion?id=" + qID + "&qID=" + erstiapp.getParams().id + "&uID=" + erstiapp.login.getUserId() + "&uPass=" + erstiapp.login.getUserPass(),
+                                                                        complete: function(responseData, textStatus, jqXHR) {
+                                                                            if (textStatus != "error") {
+                                                                                erstiapp.changePage("#qi_start");
+                                                                            }
+                                                                        },
+                                                                        error: function(responseData, textStatus, errorThrown) {
+                                                                        }
+                                                                    });
+                                                            });
+                                                        }
                                                     }
                                                 },
                                                 error: function(responseData, textStatus, errorThrown) {
@@ -151,12 +185,33 @@ module = (function() {
                                                                     if (textStatus != "error") {
                                                                         var $answerDiv = $('<div class="answerText"><p><b>' + answer.userName + ' schrieb:</b></p>' + answer.text + '</div>');
                                                                         if (aID === erstiapp.getParams().favAnswer)
-                                                                            $answerDiv.prepend('</p>Top-Antwort:</p>').addClass("favAnswer").prependTo($('#answers'));
+                                                                            $answerDiv.prepend('<p>Top-Antwort:</p>').addClass("favAnswer").prependTo($('#answers'));
                                                                         else {
                                                                             $answerDiv.appendTo($('#answers'));
                                                                             if (answer.user === erstiapp.login.getUserId()) {
+                                                                                var deleteButton = $('<a id="d' + i + '" aID="' + aID + '" class="ui-btn ui-icon-delete ui-btn-icon-left">löschen</a>');
+                                                                                $('<p style="text-align:center; "></p>').appendTo($answerDiv).append(deleteButton);
+                                                                                deleteButton.unbind().click(function() {
+                                                                                    var aID = $(this).attr("aID");
+                                                                                    if (confirm("Antwort wirklich löschen?"))
+                                                                                        $.ajax({
+                                                                                            type: 'GET',
+                                                                                            async: false,
+                                                                                            dataType: "json",
+                                                                                            url: erstiapp.getServer() + "deleteAnswer?id=" + aID + "&user=" + aUser + "&qID=" + erstiapp.getParams().id + "&uID=" + erstiapp.login.getUserId() + "&uPass=" + erstiapp.login.getUserPass(),
+                                                                                            complete: function(responseData, textStatus, jqXHR) {
+                                                                                                if (textStatus != "error") {
+                                                                                                    getAnswers();
+                                                                                                }
+                                                                                            },
+                                                                                            error: function(responseData, textStatus, errorThrown) {
+                                                                                            }
+                                                                                        });
+                                                                                });
+                                                                            }
+                                                                            if (erstiapp.getParams().uID === erstiapp.login.getUserId()) {
                                                                                 var favButton = $('<a id="b' + i + '" aID="' + aID + '" class="ui-btn ui-icon-heart ui-btn-icon-left">Top-Antwort</a>');
-                                                                                $('<p style="text-align:center"></p>').appendTo($answerDiv).append(favButton);
+                                                                                $('<p style="text-align:center; clear: both"></p>').appendTo($answerDiv).append(favButton);
 
                                                                                 favButton.click(function() {
                                                                                     aID = $(this).attr("aID");
