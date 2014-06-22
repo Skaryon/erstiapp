@@ -1,21 +1,23 @@
 var erstiapp;
-erstiapp = (function() {
-    //private
-    //references the app for use in callback functions
-    var app;
-    var server = "http://toshly-malate.codio.io:3000/";
-    var params;
-    //public
-    return {
-        //inits the app
-        //all jQuery Mobile events go here
-        init: function() {
-            app = this;
-            //load modules
-            //all pages that should show the menu panel should go in here
-            $("#login").on("pagebeforeshow", function(event) {
-                var $this = $(this);
-                $this.find("#loginButton").unbind().click(function() {
+$(function() {
+    erstiapp = (function() {
+        //private
+        //references the app for use in callback functions
+        var app;
+        var server = "http://toshly-malate.codio.io:3000/";
+        var params;
+        //public
+        return {
+            //inits the app
+            //all jQuery Mobile events go here
+            init: function() {
+                console.log("init")
+                app = this;
+                console.log($("#login"))
+                //load modules
+                //all pages that should show the menu panel should go in here
+                $("#loginButton").click(function() {
+                    console.log("jey")
                     app.login.setUsername($('#login #username').val());
                     app.login.setPassword($('#login #password').val());
                     app.login.check(function(success, error) {
@@ -25,392 +27,392 @@ erstiapp = (function() {
                             erstiapp.exception(error, "#login");
                     });
                 });
-            });
-            $("#register").on("pagebeforeshow", function(event) {
-                var $this = $(this);
-                $this.find("#registerButton").unbind().click(function() {
-                    if ($('#register #npassword').val().length < 8)
-                        erstiapp.exception('Das Passwort muss mindestens 8 Zeichen lang sein', "#register");
-                    else
-                    if ($('#register #npassword').val() !== $('#register #npassword2').val())
-                        erstiapp.exception('Passwörter stimmen nicht überein!', "#register");
-                    else
-                    if (!/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test($('#register #nmail').val()))
-                        erstiapp.exception('Ungültige mailadresse!', "#register");
-                    else {
-                        app.login.setUsername($('#register #nusername').val());
-                        app.login.setPassword($('#register #npassword').val());
-                        app.login.setMail($('#register #nmail').val());
-                        app.login.add(function(success) {
-                            if (success) {
-                                erstiapp.exception("Registrierung erfolgreich!", "#register");
-                                window.setTimeout(function()  {
-                                    app.changePage("#login");
-                                }, 2000);
+                $("#register").on("pagebeforeshow", function(event) {
+                    var $this = $(this);
+                    $this.find("#registerButton").unbind().click(function() {
+                        if ($('#register #npassword').val().length < 8)
+                            erstiapp.exception('Das Passwort muss mindestens 8 Zeichen lang sein', "#register");
+                        else
+                        if ($('#register #npassword').val() !== $('#register #npassword2').val())
+                            erstiapp.exception('Passwörter stimmen nicht überein!', "#register");
+                        else
+                        if (!/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test($('#register #nmail').val()))
+                            erstiapp.exception('Ungültige mailadresse!', "#register");
+                        else {
+                            app.login.setUsername($('#register #nusername').val());
+                            app.login.setPassword($('#register #npassword').val());
+                            app.login.setMail($('#register #nmail').val());
+                            app.login.add(function(success) {
+                                if (success) {
+                                    erstiapp.exception("Registrierung erfolgreich!", "#register");
+                                    window.setTimeout(function()  {
+                                        app.changePage("#login");
+                                    }, 2000);
+                                }
+                            });
+                        }
+                    });
+                });
+                if (window.location.hash !== "#login") {
+                    window.location.hash = "#login";
+                    location.reload();
+                }
+                $(this.menu.getPanelPages()).on("pagebeforeshow", function(event) {
+                    app.menu.addPanel($(this));
+                });
+                //handle userlogin
+                $('div[data-role="page"]').filter(function() {
+                    if ($(this).attr("id") !== "login" && $(this).attr("id") !== "register")
+                        return this;
+                }).on("pagebeforeshow", function(event) {
+                    app.login.check(function(success) {
+                        if (!success)
+                            app.changePage("#login");
+                    });
+                });
+                return this;
+            },
+            getServer: function() {
+                return server;
+            },
+            getParams: function() {
+                return params;
+            },
+            //show an exception popup
+            exception: function(exception, $page) {
+                console.log(exception);
+                $('<div data-role="popup" id="popupBasic"> <p>' + exception + '</p></div>').appendTo($page).popup().popup("open");
+            },
+            //page transition
+            changePage: function(to, options, params_in) {
+                if (typeof options === "undefined")
+                    var options = {transition: "flip"};
+                if (typeof params_in !== "undefined")
+                    params = params_in;
+                $(':mobile-pagecontainer').pagecontainer('change', to, options);
+            },
+            //handles user login
+            login: (function() {
+                //private
+                var username = "";
+                var password = "";
+                var mail = "";
+                var id;
+                //public
+                return {
+                    //checks if the entered credentials are valid
+                    check: function(callback) {
+                        //dummy implementation
+                        $.ajax({
+                            type: 'GET',
+                            async: false,
+                            dataType: "json",
+                            url: server + "checkUser?name=" + username + "&password=" + password,
+                            complete: function(responseData, textStatus, jqXHR) {
+                                console.log(textStatus)
+                                if (textStatus !== "error") {
+                                    console.log(responseData['responseText'])
+                                    var data = JSON.parse(responseData['responseText']);
+                                    console.log(data.result);
+                                    if (data.result) {
+                                        id = data.id;
+                                        console.log(id);
+                                        callback(true);
+                                    }
+                                    else {
+                                        callback(false, data.error);
+                                    }
+                                }
+                            },
+                            error: function(responseData, textStatus, errorThrown) {
                             }
                         });
-                    }
-                });
-            });
-            if (window.location.hash !== "#login") {
-                window.location.hash = "#login";
-                location.reload();
-            }
-            $(this.menu.getPanelPages()).on("pagebeforeshow", function(event) {
-                app.menu.addPanel($(this));
-            });
-            //handle userlogin
-            $('div[data-role="page"]').filter(function() {
-                if ($(this).attr("id") !== "login" && $(this).attr("id") !== "register")
-                    return this;
-            }).on("pagebeforeshow", function(event) {
-                app.login.check(function(success) {
-                    if (!success)
-                        app.changePage("#login");
-                });
-            });
-            return this;
-        },
-        getServer: function() {
-            return server;
-        },
-        getParams: function() {
-            return params;
-        },
-        //show an exception popup
-        exception: function(exception, $page) {
-            console.log(exception);
-            $('<div data-role="popup" id="popupBasic"> <p>' + exception + '</p></div>').appendTo($page).popup().popup("open");
-        },
-        //page transition
-        changePage: function(to, options, params_in) {
-            if (typeof options === "undefined")
-                var options = {transition: "flip"};
-            if (typeof params_in !== "undefined")
-                params = params_in;
-            $(':mobile-pagecontainer').pagecontainer('change', to, options);
-        },
-        //handles user login
-        login: (function() {
-            //private
-            var username = "";
-            var password = "";
-            var mail = "";
-            var id;
-            //public
-            return {
-                //checks if the entered credentials are valid
-                check: function(callback) {
-                    //dummy implementation
-                    $.ajax({
-                        type: 'GET',
-                        async: false,
-                        dataType: "json",
-                        url: server + "checkUser?name=" + username + "&password=" + password,
-                        complete: function(responseData, textStatus, jqXHR) {
-                            console.log(responseData.status)
-                            if (textStatus !== "error") {
-                                console.log(responseData['responseText'])
-                                var data = JSON.parse(responseData['responseText']);
-                                console.log(data.result);
-                                if (data.result) {
-                                    id = data.id;
-                                    console.log(id);
-                                    callback(true);
+                    },
+                    getUserId: function() {
+                        return id;
+                    },
+                    getUserPass: function() {
+                        return password;
+                    },
+                    add: function(callback) {
+                        //dummy implementation
+                        $.ajax({
+                            type: 'GET',
+                            async: false,
+                            dataType: "json",
+                            url: server + "addUser?name=" + username + "&password=" + password + "&mail=" + mail,
+                            complete: function(responseData, textStatus, jqXHR) {
+                                if (textStatus != "error") {
+                                    var data = JSON.parse(responseData['responseText']);
+                                    console.log(data.result);
+                                    if (data.result)
+                                        callback(true);
+                                    else {
+                                        erstiapp.exception(data.error, "#register");
+                                    }
+                                }
+                            },
+                            error: function(responseData, textStatus, errorThrown) {
+                            }
+                        });
+                    },
+                    setMail: function(u) {
+                        mail = u;
+                    },
+                    setUsername: function(u) {
+                        username = u;
+                    },
+                    setPassword: function(p) {
+                        password = this.SHA256(p);
+                    },
+                    SHA256: function(s) {
+
+                        var chrsz = 8;
+                        var hexcase = 0;
+
+                        function safe_add(x, y) {
+                            var lsw = (x & 0xFFFF) + (y & 0xFFFF);
+                            var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+                            return (msw << 16) | (lsw & 0xFFFF);
+                        }
+
+                        function S(X, n) {
+                            return (X >>> n) | (X << (32 - n));
+                        }
+
+                        function R(X, n) {
+                            return (X >>> n);
+                        }
+
+                        function Ch(x, y, z) {
+                            return ((x & y) ^ ((~x) & z));
+                        }
+
+                        function Maj(x, y, z) {
+                            return ((x & y) ^ (x & z) ^ (y & z));
+                        }
+
+                        function Sigma0256(x) {
+                            return (S(x, 2) ^ S(x, 13) ^ S(x, 22));
+                        }
+
+                        function Sigma1256(x) {
+                            return (S(x, 6) ^ S(x, 11) ^ S(x, 25));
+                        }
+
+                        function Gamma0256(x) {
+                            return (S(x, 7) ^ S(x, 18) ^ R(x, 3));
+                        }
+
+                        function Gamma1256(x) {
+                            return (S(x, 17) ^ S(x, 19) ^ R(x, 10));
+                        }
+
+                        function core_sha256(m, l) {
+                            var K = new Array(0x428A2F98, 0x71374491, 0xB5C0FBCF, 0xE9B5DBA5, 0x3956C25B, 0x59F111F1, 0x923F82A4, 0xAB1C5ED5, 0xD807AA98, 0x12835B01, 0x243185BE, 0x550C7DC3, 0x72BE5D74, 0x80DEB1FE, 0x9BDC06A7, 0xC19BF174, 0xE49B69C1, 0xEFBE4786, 0xFC19DC6, 0x240CA1CC, 0x2DE92C6F, 0x4A7484AA, 0x5CB0A9DC, 0x76F988DA, 0x983E5152, 0xA831C66D, 0xB00327C8, 0xBF597FC7, 0xC6E00BF3, 0xD5A79147, 0x6CA6351, 0x14292967, 0x27B70A85, 0x2E1B2138, 0x4D2C6DFC, 0x53380D13, 0x650A7354, 0x766A0ABB, 0x81C2C92E, 0x92722C85, 0xA2BFE8A1, 0xA81A664B, 0xC24B8B70, 0xC76C51A3, 0xD192E819, 0xD6990624, 0xF40E3585, 0x106AA070, 0x19A4C116, 0x1E376C08, 0x2748774C, 0x34B0BCB5, 0x391C0CB3, 0x4ED8AA4A, 0x5B9CCA4F, 0x682E6FF3, 0x748F82EE, 0x78A5636F, 0x84C87814, 0x8CC70208, 0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2);
+                            var HASH = new Array(0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A, 0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19);
+                            var W = new Array(64);
+                            var a, b, c, d, e, f, g, h, i, j;
+                            var T1, T2;
+
+                            m[l >> 5] |= 0x80 << (24 - l % 32);
+                            m[((l + 64 >> 9) << 4) + 15] = l;
+
+                            for (var i = 0; i < m.length; i += 16) {
+                                a = HASH[0];
+                                b = HASH[1];
+                                c = HASH[2];
+                                d = HASH[3];
+                                e = HASH[4];
+                                f = HASH[5];
+                                g = HASH[6];
+                                h = HASH[7];
+
+                                for (var j = 0; j < 64; j++) {
+                                    if (j < 16)
+                                        W[j] = m[j + i];
+                                    else
+                                        W[j] = safe_add(safe_add(safe_add(Gamma1256(W[j - 2]), W[j - 7]), Gamma0256(W[j - 15])), W[j - 16]);
+
+                                    T1 = safe_add(safe_add(safe_add(safe_add(h, Sigma1256(e)), Ch(e, f, g)), K[j]), W[j]);
+                                    T2 = safe_add(Sigma0256(a), Maj(a, b, c));
+
+                                    h = g;
+                                    g = f;
+                                    f = e;
+                                    e = safe_add(d, T1);
+                                    d = c;
+                                    c = b;
+                                    b = a;
+                                    a = safe_add(T1, T2);
+                                }
+
+                                HASH[0] = safe_add(a, HASH[0]);
+                                HASH[1] = safe_add(b, HASH[1]);
+                                HASH[2] = safe_add(c, HASH[2]);
+                                HASH[3] = safe_add(d, HASH[3]);
+                                HASH[4] = safe_add(e, HASH[4]);
+                                HASH[5] = safe_add(f, HASH[5]);
+                                HASH[6] = safe_add(g, HASH[6]);
+                                HASH[7] = safe_add(h, HASH[7]);
+                            }
+                            return HASH;
+                        }
+
+                        function str2binb(str) {
+                            var bin = Array();
+                            var mask = (1 << chrsz) - 1;
+                            for (var i = 0; i < str.length * chrsz; i += chrsz) {
+                                bin[i >> 5] |= (str.charCodeAt(i / chrsz) & mask) << (24 - i % 32);
+                            }
+                            return bin;
+                        }
+
+                        function Utf8Encode(string) {
+                            string = string.replace(/\r\n/g, "\n");
+                            var utftext = "";
+
+                            for (var n = 0; n < string.length; n++) {
+
+                                var c = string.charCodeAt(n);
+
+                                if (c < 128) {
+                                    utftext += String.fromCharCode(c);
+                                }
+                                else if ((c > 127) && (c < 2048)) {
+                                    utftext += String.fromCharCode((c >> 6) | 192);
+                                    utftext += String.fromCharCode((c & 63) | 128);
                                 }
                                 else {
-                                    callback(false, data.error);
+                                    utftext += String.fromCharCode((c >> 12) | 224);
+                                    utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                                    utftext += String.fromCharCode((c & 63) | 128);
                                 }
-                            }
-                        },
-                        error: function(responseData, textStatus, errorThrown) {
-                        }
-                    });
-                },
-                getUserId: function() {
-                    return id;
-                },
-                getUserPass: function() {
-                    return password;
-                },
-                add: function(callback) {
-                    //dummy implementation
-                    $.ajax({
-                        type: 'GET',
-                        async: false,
-                        dataType: "json",
-                        url: server + "addUser?name=" + username + "&password=" + password + "&mail=" + mail,
-                        complete: function(responseData, textStatus, jqXHR) {
-                            if (textStatus != "error") {
-                                var data = JSON.parse(responseData['responseText']);
-                                console.log(data.result);
-                                if (data.result)
-                                    callback(true);
-                                else {
-                                    erstiapp.exception(data.error, "#register");
-                                }
-                            }
-                        },
-                        error: function(responseData, textStatus, errorThrown) {
-                        }
-                    });
-                },
-                setMail: function(u) {
-                    mail = u;
-                },
-                setUsername: function(u) {
-                    username = u;
-                },
-                setPassword: function(p) {
-                    password = this.SHA256(p);
-                },
-                SHA256: function(s) {
 
-                    var chrsz = 8;
-                    var hexcase = 0;
-
-                    function safe_add(x, y) {
-                        var lsw = (x & 0xFFFF) + (y & 0xFFFF);
-                        var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
-                        return (msw << 16) | (lsw & 0xFFFF);
-                    }
-
-                    function S(X, n) {
-                        return (X >>> n) | (X << (32 - n));
-                    }
-
-                    function R(X, n) {
-                        return (X >>> n);
-                    }
-
-                    function Ch(x, y, z) {
-                        return ((x & y) ^ ((~x) & z));
-                    }
-
-                    function Maj(x, y, z) {
-                        return ((x & y) ^ (x & z) ^ (y & z));
-                    }
-
-                    function Sigma0256(x) {
-                        return (S(x, 2) ^ S(x, 13) ^ S(x, 22));
-                    }
-
-                    function Sigma1256(x) {
-                        return (S(x, 6) ^ S(x, 11) ^ S(x, 25));
-                    }
-
-                    function Gamma0256(x) {
-                        return (S(x, 7) ^ S(x, 18) ^ R(x, 3));
-                    }
-
-                    function Gamma1256(x) {
-                        return (S(x, 17) ^ S(x, 19) ^ R(x, 10));
-                    }
-
-                    function core_sha256(m, l) {
-                        var K = new Array(0x428A2F98, 0x71374491, 0xB5C0FBCF, 0xE9B5DBA5, 0x3956C25B, 0x59F111F1, 0x923F82A4, 0xAB1C5ED5, 0xD807AA98, 0x12835B01, 0x243185BE, 0x550C7DC3, 0x72BE5D74, 0x80DEB1FE, 0x9BDC06A7, 0xC19BF174, 0xE49B69C1, 0xEFBE4786, 0xFC19DC6, 0x240CA1CC, 0x2DE92C6F, 0x4A7484AA, 0x5CB0A9DC, 0x76F988DA, 0x983E5152, 0xA831C66D, 0xB00327C8, 0xBF597FC7, 0xC6E00BF3, 0xD5A79147, 0x6CA6351, 0x14292967, 0x27B70A85, 0x2E1B2138, 0x4D2C6DFC, 0x53380D13, 0x650A7354, 0x766A0ABB, 0x81C2C92E, 0x92722C85, 0xA2BFE8A1, 0xA81A664B, 0xC24B8B70, 0xC76C51A3, 0xD192E819, 0xD6990624, 0xF40E3585, 0x106AA070, 0x19A4C116, 0x1E376C08, 0x2748774C, 0x34B0BCB5, 0x391C0CB3, 0x4ED8AA4A, 0x5B9CCA4F, 0x682E6FF3, 0x748F82EE, 0x78A5636F, 0x84C87814, 0x8CC70208, 0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2);
-                        var HASH = new Array(0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A, 0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19);
-                        var W = new Array(64);
-                        var a, b, c, d, e, f, g, h, i, j;
-                        var T1, T2;
-
-                        m[l >> 5] |= 0x80 << (24 - l % 32);
-                        m[((l + 64 >> 9) << 4) + 15] = l;
-
-                        for (var i = 0; i < m.length; i += 16) {
-                            a = HASH[0];
-                            b = HASH[1];
-                            c = HASH[2];
-                            d = HASH[3];
-                            e = HASH[4];
-                            f = HASH[5];
-                            g = HASH[6];
-                            h = HASH[7];
-
-                            for (var j = 0; j < 64; j++) {
-                                if (j < 16)
-                                    W[j] = m[j + i];
-                                else
-                                    W[j] = safe_add(safe_add(safe_add(Gamma1256(W[j - 2]), W[j - 7]), Gamma0256(W[j - 15])), W[j - 16]);
-
-                                T1 = safe_add(safe_add(safe_add(safe_add(h, Sigma1256(e)), Ch(e, f, g)), K[j]), W[j]);
-                                T2 = safe_add(Sigma0256(a), Maj(a, b, c));
-
-                                h = g;
-                                g = f;
-                                f = e;
-                                e = safe_add(d, T1);
-                                d = c;
-                                c = b;
-                                b = a;
-                                a = safe_add(T1, T2);
                             }
 
-                            HASH[0] = safe_add(a, HASH[0]);
-                            HASH[1] = safe_add(b, HASH[1]);
-                            HASH[2] = safe_add(c, HASH[2]);
-                            HASH[3] = safe_add(d, HASH[3]);
-                            HASH[4] = safe_add(e, HASH[4]);
-                            HASH[5] = safe_add(f, HASH[5]);
-                            HASH[6] = safe_add(g, HASH[6]);
-                            HASH[7] = safe_add(h, HASH[7]);
+                            return utftext;
                         }
-                        return HASH;
-                    }
 
-                    function str2binb(str) {
-                        var bin = Array();
-                        var mask = (1 << chrsz) - 1;
-                        for (var i = 0; i < str.length * chrsz; i += chrsz) {
-                            bin[i >> 5] |= (str.charCodeAt(i / chrsz) & mask) << (24 - i % 32);
-                        }
-                        return bin;
-                    }
-
-                    function Utf8Encode(string) {
-                        string = string.replace(/\r\n/g, "\n");
-                        var utftext = "";
-
-                        for (var n = 0; n < string.length; n++) {
-
-                            var c = string.charCodeAt(n);
-
-                            if (c < 128) {
-                                utftext += String.fromCharCode(c);
+                        function binb2hex(binarray) {
+                            var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
+                            var str = "";
+                            for (var i = 0; i < binarray.length * 4; i++) {
+                                str += hex_tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8 + 4)) & 0xF) +
+                                        hex_tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8)) & 0xF);
                             }
-                            else if ((c > 127) && (c < 2048)) {
-                                utftext += String.fromCharCode((c >> 6) | 192);
-                                utftext += String.fromCharCode((c & 63) | 128);
-                            }
-                            else {
-                                utftext += String.fromCharCode((c >> 12) | 224);
-                                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-                                utftext += String.fromCharCode((c & 63) | 128);
-                            }
-
+                            return str;
                         }
 
-                        return utftext;
-                    }
+                        s = Utf8Encode(s);
+                        return binb2hex(core_sha256(str2binb(s), s.length * chrsz));
 
-                    function binb2hex(binarray) {
-                        var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
-                        var str = "";
-                        for (var i = 0; i < binarray.length * 4; i++) {
-                            str += hex_tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8 + 4)) & 0xF) +
-                                    hex_tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8)) & 0xF);
-                        }
-                        return str;
-                    }
-
-                    s = Utf8Encode(s);
-                    return binb2hex(core_sha256(str2binb(s), s.length * chrsz));
-
-                }
-            }
-        })(),
-        menu: (function() {
-            //private
-            //all menu items
-            var menuItems = {
-            }
-            //public
-            return {
-                //add a new menutiem
-                add: function(name, menuItem) {
-                    menuItems[name] = menuItem;
-                },
-                //get all pages with panels
-                getPanelPages: function() {
-                    var panelPages = [];
-                    $.each(menuItems, function(key, value) {
-                        panelPages.push(value.$page);
-                    });
-                    return panelPages.join(', ');
-                },
-                //remove menuItem
-                remove: function(id) {
-                    delete menuItems[id];
-                },
-                //renders the menuItems to the panel
-                render: function($page) {
-                    $.each(menuItems, function(key, value) {
-                        if (typeof value.hide === "undefined" || !value.hide) {
-                            var $menuItem = $('<input type="button" id="menuitem_' + key.replace(/ /g, '') + '" data-icon="' + value.icon + '" onclick="window.location.hash=\'' + value.$page + '\'" value="' + value.name + '" />').appendTo($('#menu')).button();
-                            if (value.$page === window.location.hash)
-                                $menuItem.button("disable");
-                        }
-                    });
-                },
-                //move the menuItems panel to the current page
-                addPanel: function($page) {
-                    //moves the openpanel button to the $page and adds the click event
-                    var $openpanel = $('#openpanel').first();
-                    if (!($('#buttonDiv').length > 0)) {
-                        $('<div id="buttonDiv" class="buttonDiv"></div>').prepend($openpanel).prependTo($page.find('div[data-role="header"]'));
-                    }
-                    $('#buttonDiv').html("").append($openpanel).remove().prependTo($page.find('div[data-role="header"]'));
-                    $openpanel.unbind().click(function() {
-                        var panel = $page.find('#menu');
-                        if (panel.hasClass("ui-panel-open")) {
-                            panel.panel("close");
-                        } else {
-                            panel.panel("open");
-                        }
-                    });
-                    //moves the menuItems to the $page
-                    $('#menu').remove().prependTo($page).html("");
-                    //adds menuItems items to the event for the menuItems panel
-                    this.render($page);
-                    $page.trigger("create");
-                }
-            }
-        })(),
-        modules: (function() {
-            //private
-            var mods = {};
-            var options = {};
-            var moduleCount = 0;
-            //public
-            return {
-                setModules: function(m) {
-                    mods = m;
-                    $.each(m, function(key, module) {
-                        moduleCount++;
-                    });
-                    $.each(m, function(key, module) {
-                        $('body').append('<script type="text/javascript" src="modules/' + module.path + '/module.js" ></script>');
-                    });
-                },
-                registerModule: function(name, instance, options) {
-                    if (typeof options !== undefined)
-                        mods[name].options = options;
-                    else
-                        mods[name].options = {};
-                    mods[name].instance = instance;
-                    return mods[name].path;
-                },
-                module: function(name) {
-                    return mods[name].instance;
-                },
-                loadPage: function(path, callback) {
-                    $('<div></div>').load(path, function(responseTxt, statusTxt, xhr) {
-                        if (statusTxt == "success") {
-                            var $page = $(this).find('div[data-role=page]');
-                            $page.appendTo('body');
-                            $page.trigger("pagecreate");
-                            callback($page);
-                        }
-                    });
-                },
-                finishedLoading: function(name) {
-                    moduleCount--;
-                    if (moduleCount < 1) {
-                        erstiapp.init();
                     }
                 }
-            }
-        })()
-    }
-})();
-$('<script type="text/javascript" src="modules.js"></script>').appendTo('body');
+            })(),
+            menu: (function() {
+                //private
+                //all menu items
+                var menuItems = {
+                }
+                //public
+                return {
+                    //add a new menutiem
+                    add: function(name, menuItem) {
+                        menuItems[name] = menuItem;
+                    },
+                    //get all pages with panels
+                    getPanelPages: function() {
+                        var panelPages = [];
+                        $.each(menuItems, function(key, value) {
+                            panelPages.push(value.$page);
+                        });
+                        return panelPages.join(', ');
+                    },
+                    //remove menuItem
+                    remove: function(id) {
+                        delete menuItems[id];
+                    },
+                    //renders the menuItems to the panel
+                    render: function($page) {
+                        $.each(menuItems, function(key, value) {
+                            if (typeof value.hide === "undefined" || !value.hide) {
+                                var $menuItem = $('<input type="button" id="menuitem_' + key.replace(/ /g, '') + '" data-icon="' + value.icon + '" onclick="window.location.hash=\'' + value.$page + '\'" value="' + value.name + '" />').appendTo($('#menu')).button();
+                                if (value.$page === window.location.hash)
+                                    $menuItem.button("disable");
+                            }
+                        });
+                    },
+                    //move the menuItems panel to the current page
+                    addPanel: function($page) {
+                        //moves the openpanel button to the $page and adds the click event
+                        var $openpanel = $('#openpanel').first();
+                        if (!($('#buttonDiv').length > 0)) {
+                            $('<div id="buttonDiv" class="buttonDiv"></div>').prepend($openpanel).prependTo($page.find('div[data-role="header"]'));
+                        }
+                        $('#buttonDiv').html("").append($openpanel).remove().prependTo($page.find('div[data-role="header"]'));
+                        $openpanel.unbind().click(function() {
+                            var panel = $page.find('#menu');
+                            if (panel.hasClass("ui-panel-open")) {
+                                panel.panel("close");
+                            } else {
+                                panel.panel("open");
+                            }
+                        });
+                        //moves the menuItems to the $page
+                        $('#menu').remove().prependTo($page).html("");
+                        //adds menuItems items to the event for the menuItems panel
+                        this.render($page);
+                        $page.trigger("create");
+                    }
+                }
+            })(),
+            modules: (function() {
+                //private
+                var mods = {};
+                var options = {};
+                var moduleCount = 0;
+                //public
+                return {
+                    setModules: function(m) {
+                        mods = m;
+                        $.each(m, function(key, module) {
+                            moduleCount++;
+                        });
+                        $.each(m, function(key, module) {
+                            $('body').append('<script type="text/javascript" src="modules/' + module.path + '/module.js" ></script>');
+                        });
+                    },
+                    registerModule: function(name, instance, options) {
+                        if (typeof options !== undefined)
+                            mods[name].options = options;
+                        else
+                            mods[name].options = {};
+                        mods[name].instance = instance;
+                        return mods[name].path;
+                    },
+                    module: function(name) {
+                        return mods[name].instance;
+                    },
+                    loadPage: function(path, callback) {
+                        $('<div></div>').load(path, function(responseTxt, statusTxt, xhr) {
+                            if (statusTxt == "success") {
+                                var $page = $(this).find('div[data-role=page]');
+                                $page.appendTo('body');
+                                $page.trigger("pagecreate");
+                                callback($page);
+                            }
+                        });
+                    },
+                    finishedLoading: function(name) {
+                        moduleCount--;
+                        if (moduleCount < 1) {
+                            erstiapp.init();
+                        }
+                    }
+                }
+            })()
+        }
+    })();
+    $('<script type="text/javascript" src="modules.js"></script>').appendTo('body');
+});
