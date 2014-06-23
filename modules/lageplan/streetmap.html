@@ -16,8 +16,11 @@
                 padding: 0;
                 margin: 0;
             }
-            html, body, #map {
+            html, body{
                 height: 100%;
+            }
+            #map {
+                height: 80%;
             }
             table {
                 color: black;
@@ -124,7 +127,7 @@
                 </tr>
             </tbody>
         </table>
-        
+
 
 
         <script>
@@ -140,9 +143,6 @@
             var map = L.map('map').setView([latpos, lngpos], 18).addLayer(osm);
             map.locate({setView: false});
 
-
-
-
             function onLocationFound(e) {
                 var popupOptions =
                         {
@@ -153,6 +153,17 @@
                         .openPopup();
             }
             map.on('locationfound', onLocationFound);
+            
+            /*
+            map.dragging.disable();
+            map.on('dragend', function(e) {
+		var cnt = map.getCenter();
+	        var position = marker.getLatLng();
+		lat = Number(position['lat']).toFixed(5);
+		lng = Number(position['lng']).toFixed(5);
+		//console.log(position);
+		setLeafLatLong(lat, lng);
+	});*/
 
         </script>
     </body>
